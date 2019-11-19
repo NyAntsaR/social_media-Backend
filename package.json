@@ -1,0 +1,20 @@
+{
+  "name": "social-media",
+  "version": "1.0.0",
+  "description": "social media",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "keywords": [
+    "node",
+    "api"
+  ],
+  "author": "Ny Antsa",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.4"
+  }
+}
