@@ -5,6 +5,7 @@ const morgan = require( 'morgan' );
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
+const bodyParser = require('body-parser');
 
 //db connection
 mongoose.connect(
@@ -23,6 +24,7 @@ const postRoutes = require ('./routes/post');
 
 // middleware
 app.use(morgan('dev'));
+app.use(bodyParser.json());
 app.use('/', postRoutes);
 
 const port = 8080;
