@@ -13,8 +13,19 @@
   "author": "Ny Antsa",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "mongoose": "^5.7.12",
     "morgan": "^1.9.1",
     "nodemon": "^1.19.4"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NyAntsaR/social_media-Backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NyAntsaR/social_media-Backend/issues"
+  },
+  "homepage": "https://github.com/NyAntsaR/social_media-Backend#readme"
 }
