@@ -1,5 +1,4 @@
-const Post = require('../model/post');
-
+const Post = require('../models/post');
 
 exports.getPosts = (req, res) => {
     res.json({
@@ -13,12 +12,7 @@ exports.getPosts = (req, res) => {
 // Creating a new post
 exports.createPost = (req, res) => {
     const post = new Post( req.body );
-    post.save((err, result) => {
-        if (err) {
-            return res.status(400).json({
-                error:err
-            })
-        }
+    post.save().then(result => {
         res.status(200).json({
             post: result
         });

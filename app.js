@@ -3,9 +3,13 @@ const app = express();
 // giving the message to the terminal from where we get the request
 const morgan = require( 'morgan' );
 const mongoose = require('mongoose');
+
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
 const dotenv = require('dotenv');
 dotenv.config();
-const bodyParser = require('body-parser');
+
+
 
 //db connection
 mongoose.connect(
@@ -26,6 +30,7 @@ const postRoutes = require ('./routes/post');
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use('/', postRoutes);
+app.use(expressValidator());
 
 const port = 8080;
 app.listen(port, () => console.log(`A Node Js API is listening on port :  ${port}`));
