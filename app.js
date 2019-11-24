@@ -1,11 +1,14 @@
-const express = require("express");
-const app = express();
-const mongoose = require("mongoose");
-const morgan = require("morgan");
-const bodyParser = require("body-parser");
-const expressValidator = require("express-validator");
 const dotenv = require("dotenv");
+const morgan = require("morgan");
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cookieParser = require ("cookie-parser");
+const expressValidator = require("express-validator");
+
 dotenv.config();
+
+const app = express();
 
 // Database
 mongoose
@@ -25,8 +28,10 @@ const authRoutes = require("./routes/auth");
 
 // middleware
 app.use(morgan("dev"));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(expressValidator());
+
 app.use("/", postRoutes);
 app.use("/", authRoutes);
 

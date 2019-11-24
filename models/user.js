@@ -39,8 +39,14 @@ userSchema.virtual( 'password' )
     return this._password;
 })
 
-// methods to encrypt the password
+// methods 
 userSchema.methods = {
+    // method to authenticate
+    authenticate : function (plainText) {
+        return this.encryptPassword(plainText) === this.hashed_password
+    },
+    
+    // encrypt password
     encryptPassword: function( password ) {
         if ( !password ) return "";
         try {
@@ -53,5 +59,7 @@ userSchema.methods = {
         }
     }
 }
+
+
 
 module.exports = mongoose.model("User", userSchema);
