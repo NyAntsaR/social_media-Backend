@@ -10,7 +10,8 @@
     "express-validator": "^5.3.1",
     "mongoose": "^5.7.12",
     "morgan": "^1.9.1",
-    "nodemon": "^1.19.4"
+    "nodemon": "^1.19.4",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {},
   "scripts": {
