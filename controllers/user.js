@@ -1,4 +1,5 @@
 const User = require ("../models/user");
+const _ = require("lodash")
 
 // Find the user by Id
 exports.userById = ( req, res, next, id ) => {
@@ -43,4 +44,25 @@ exports.getUser = ( req, res, next ) => {
     req.profile.hashed_password = undefined;
     req.profile.salt = undefined;
     return res.json(req.profile);
+}
+
+// Update user
+exports.updateUser = (req, res, next) => {
+    let user = req.profile;
+    // extend - mutate the source object based on the new information from the req.body
+    user = _.extend(user, req.body);
+    user.updated = Date.now();
+    // save the user in the database
+    user.save(err => {
+        if (err) {
+            return res.status(401).json({
+                error: "You are not authorized to perform this action!"
+            })
+        }
+        user.hashed_password = undefined;
+        user.salt = undefined;
+        res.json({
+            user
+        });
+    });
 }
