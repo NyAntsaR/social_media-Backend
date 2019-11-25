@@ -37,3 +37,10 @@ exports.allUsers = (req, res, next) => {
         })
     }).select("name email updated created");
 }
+
+// show single user
+exports.getUser = ( req, res, next ) => {
+    req.profile.hashed_password = undefined;
+    req.profile.salt = undefined;
+    return res.json(req.profile);
+}
