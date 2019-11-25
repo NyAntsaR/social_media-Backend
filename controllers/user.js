@@ -23,3 +23,17 @@ exports.hasAuthorization = (req, res, next) => {
         });
     }
 }
+
+// show all users
+exports.allUsers = (req, res, next) => {
+    User.find((err, users) => {
+        if ( err ) {
+            return res.status(400).json({
+                error: err
+            });
+        }
+        res.json({
+            users
+        })
+    }).select("name email updated created");
+}
