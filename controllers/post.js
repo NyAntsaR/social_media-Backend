@@ -51,3 +51,22 @@ exports.createPost = (req, res, next) => {
     })
 };
 
+// Get posts by user
+exports.postedByUser = (req, res, next) => {
+    Post.find({
+        postedBy: req.profile._id
+    })
+    // use populate if it's different module
+    .populate("postedBy", "_id name")
+    .sort("_created")
+    .exec((err, posts) => {
+        if ( err ) {
+            return res.status(400).json({
+                error: err
+            })
+        }
+        res.json({
+            posts
+        })
+    });
+}
