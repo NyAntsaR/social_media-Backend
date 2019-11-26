@@ -1,6 +1,7 @@
+const fs = require("fs");
+const cors = require("cors");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
-const fs = require("fs");
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -49,6 +50,7 @@ app.get('/', (req, res) => {
 // middleware
 app.use(morgan("dev"));
 app.use(cookieParser());
+app.use(cors());
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use("/", postRoutes);

@@ -1,5 +1,5 @@
-const User = require ("../models/user");
 const _ = require("lodash")
+const User = require ("../models/user");
 
 // Find the user by Id
 exports.userById = ( req, res, next, id ) => {
