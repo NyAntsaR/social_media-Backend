@@ -1,6 +1,7 @@
 const Post = require("../models/post");
 const formidable = require ("formidable");
 const fs = require("fs");
+const _ = require("lodash");
 
 // Middleware to get the id of each post
 exports.postById = (req, res, next, id) => {
@@ -97,6 +98,24 @@ exports.isPoster = (req, res, next) => {
     }
     next();
 };
+
+// Update post
+exports.updatePost = ( req, res, next ) => {
+    let post = req.post;
+    post = _.extend(post, req.body);
+    post.updated = Date.now();
+    post.save( err => {
+        if ( err ) {
+            return res.status(400).json({
+                error: err
+            })
+        }
+        res.json({
+            post: post,
+            message: "Post successfully updated"
+        })
+    })
+}
 
 // delete post
 exports.deletePost = (req, res) => {
