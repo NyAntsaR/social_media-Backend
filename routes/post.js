@@ -6,7 +6,7 @@ const { getPosts, createPost, postedByUser, postById, isPoster, updatePost, dele
 
 const router = express.Router();
 
-router.get("/", getPosts);
+router.get("/posts", getPosts);
 router.post("/post/new/:userId", requireSignin, createPost, createPostValidator);
 router.get("/post/by/:userId", requireSignin, postedByUser);
 router.put("/post/:postId", updatePost);
