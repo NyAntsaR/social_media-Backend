@@ -2,6 +2,22 @@ const Post = require("../models/post");
 const formidable = require ("formidable");
 const fs = require("fs");
 
+// Middleware to get the id of each post
+exports.postById = (req, res, next, id) => {
+    Post.findById(id)
+    .populate("postedBy", "_id name")
+    .exec((err, post) => {
+        if (err || !post) {
+            return res.status(400).json({
+                error: err
+            });
+        }
+        req.post = post;
+        next();
+    });
+};
+
+
 // Get all posts
 exports.getPosts = (req, res) => {
     // get the post from the database
@@ -70,3 +86,29 @@ exports.postedByUser = (req, res, next) => {
         })
     });
 }
+// is poster check if the id of the user and the post by id matches
+exports.isPoster = (req, res, next) => {
+    let isPoster = req.post && req.auth && req.post.postedBy._id == req.auth._id;
+
+    if (!isPoster) {
+        return res.status(403).json({
+            error: "User is not authorized"
+        });
+    }
+    next();
+};
+
+// delete post
+exports.deletePost = (req, res) => {
+    let post = req.post;
+    post.remove((err, post) => {
+        if (err) {
+            return res.status(400).json({
+                error: err
+            });
+        }
+        res.json({
+            message: "Post deleted successfully"
+        });
+    });
+};
