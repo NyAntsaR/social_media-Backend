@@ -170,3 +170,20 @@ exports.removeFollowers = (req, res, next) => {
             res.json(result);
         });
 }
+
+// Suggest only unfollowed user
+exports.findPeople = (req, res, next) => {
+    // grab all the list of following
+    let following = req.profile.following;
+    following.push(req.profile._id);
+
+    // not include the following
+    User.find({ _id: { $nin: following }}, (err, users) => {
+        if ( err ) {
+            return res.status(400).json({
+                error: err
+            })
+        }
+        res.json(users);
+    }).select('name')
+}
