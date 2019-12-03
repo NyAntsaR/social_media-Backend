@@ -108,3 +108,39 @@ exports.deleteUser = (req, res, next) => {
         });
     })
 }
+
+// follow/ unfollow
+exports.addFollowing = (req, res, next) => {
+    // update the following list of the logged in user
+    // followId from the client side
+    User.findByIdAndUpdate(req.body.userById, {$push: {
+        following: req.body.followId
+    }}, (err, result) => {
+        if (err) {
+            return res.status(400).json({
+                error: err
+            })
+        } next();
+    })
+}
+
+exports.addFollowers = (req, res, next) => {
+    // update the following list of the logged in user
+    // followId from the client side
+    // {new: true} return the new data not the old 
+    User.findByIdAndUpdate(req.body.followId, {$push: {
+        followers: req.body.userId
+    }},  { new: true })
+    .populate('following', '_id name')
+    .populate('followers', '_id name')
+    .exec(( err, result) => {
+        if (err) {
+            return res.status(400).json({
+                error: err
+            })
+        }
+        result.hashed_password = undefined;
+        result.salt = undefined;
+        res.json(result);
+    })
+}
