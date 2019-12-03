@@ -1,5 +1,8 @@
 const _ = require("lodash")
 const User = require ("../models/user");
+const fs = require("fs");
+const formidable = require("formidable");
+
 
 // Find the user by Id
 exports.userById = ( req, res, next, id ) => {
@@ -10,7 +13,7 @@ exports.userById = ( req, res, next, id ) => {
             })
         }
         // add profile object in req with user info
-        req.profile = user
+        req.profile = user;
         next();
     })
 }
@@ -33,9 +36,7 @@ exports.allUsers = (req, res, next) => {
                 error: err
             });
         }
-        res.json({
-            users
-        })
+        res.json(users);
     }).select("name email updated created");
 }
 
@@ -48,24 +49,36 @@ exports.getUser = ( req, res, next ) => {
 
 // Update user
 exports.updateUser = (req, res, next) => {
-    let user = req.profile;
-    // extend - mutate the source object based on the new information from the req.body
-    user = _.extend(user, req.body);
-    user.updated = Date.now();
-    // save the user in the database
-    user.save(err => {
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, (err, fields, files) => {
         if (err) {
-            return res.status(401).json({
-                error: "You are not authorized to perform this action!"
-            })
+            return res.status(400).json({
+                error: "Photo could not be uploaded"
+            });
         }
-        user.hashed_password = undefined;
-        user.salt = undefined;
-        res.json({
-            user
+        // save user
+        let user = req.profile;
+        user = _.extend(user, fields);
+        user.updated = Date.now();
+
+        if (files.photo) {
+            user.photo.data = fs.readFileSync(files.photo.path);
+            user.photo.contentType = files.photo.type;
+        }
+
+        user.save((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            user.hashed_password = undefined;
+            user.salt = undefined;
+            res.json(user);
         });
     });
-}
+};
 
 // Delete user
 exports.deleteUser = (req, res, next) => {
