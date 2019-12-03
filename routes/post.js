@@ -6,7 +6,8 @@ const {
     postById,
     isPoster,
     updatePost,
-    deletePost
+    deletePost,
+    photo
 } = require("../controllers/post");
 const { requireSignin } = require("../controllers/auth");
 const { userById } = require("../controllers/user");
@@ -29,5 +30,7 @@ router.delete("/post/:postId", requireSignin, isPoster, deletePost);
 router.param("userId", userById);
 // any route containing :postId, our app will first execute postById()
 router.param("postId", postById);
+//photo
+router.get("/post/photo/:postId", photo);
 
 module.exports = router;
