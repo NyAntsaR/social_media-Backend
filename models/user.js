@@ -1,6 +1,6 @@
-const crypto = require('crypto');
-const uuidv1 = require("uuid/v1");
 const mongoose = require("mongoose");
+const uuidv1 = require("uuid/v1");
+const crypto = require("crypto");
 const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
@@ -11,8 +11,8 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,
-        trim: true
+        trim: true,
+        required: true
     },
     hashed_password: {
         type: String,
@@ -32,51 +32,49 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    following: [{ 
-        type: ObjectId, 
-        ref: "User" 
-    }],
-    followers: [{ 
-        type: ObjectId, 
-        ref: "User" 
-    }]
+    following: [{ type: ObjectId, ref: "User" }],
+    followers: [{ type: ObjectId, ref: "User" }]
 });
 
-// virtual fields
-userSchema.virtual( 'password' )
-.set( function(password) {
-    // create temporary variable called_password
-    this._password = password;
-    // generate a unique timestamp using the universal unique Identifier package
-    this.salt = uuidv1();
-    // encrypt password
-    this.hashed_password = this.encryptPassword(password);
-})
-.get( function() {
-    return this._password;
-})
+/**
+ * Virtual fields are additional fields for a given model.
+ * Their values can be set manually or automatically with defined functionality.
+ * Keep in mind: virtual properties (password) don’t get persisted in the database.
+ * They only exist logically and are not written to the document’s collection.
+ */
 
-// methods 
+// virtual field
+userSchema
+    .virtual("password")
+    .set(function(password) {
+        // create temporary variable called _password
+        this._password = password;
+        // generate a timestamp
+        this.salt = uuidv1();
+        // encryptPassword()
+        this.hashed_password = this.encryptPassword(password);
+    })
+    .get(function() {
+        return this._password;
+    });
+
+// methods
 userSchema.methods = {
-    // method to authenticate
-    authenticate : function (plainText) {
-        return this.encryptPassword(plainText) === this.hashed_password
+    authenticate: function(plainText) {
+        return this.encryptPassword(plainText) === this.hashed_password;
     },
-    
-    // encrypt password
-    encryptPassword: function( password ) {
-        if ( !password ) return "";
+
+    encryptPassword: function(password) {
+        if (!password) return "";
         try {
             return crypto
-                    .createHmac( 'sha1', this.salt)
-                    .update(password)
-                    .digest('hex');
+                .createHmac("sha1", this.salt)
+                .update(password)
+                .digest("hex");
         } catch (err) {
             return "";
         }
     }
-}
-
-
+};
 
 module.exports = mongoose.model("User", userSchema);

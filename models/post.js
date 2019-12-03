@@ -11,17 +11,16 @@ const postSchema = new mongoose.Schema({
         required: true
     },
     photo: {
-        type: Buffer,
-        contentType: String
+        data: Buffer,
+        contenType: String
     },
-    // relationship with the user
     postedBy: {
         type: ObjectId,
         ref: "User"
     },
     created: {
         type: Date,
-        default: Date.now()
+        default: Date.now
     }
 });
 
