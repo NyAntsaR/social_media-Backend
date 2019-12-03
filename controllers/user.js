@@ -113,14 +113,11 @@ exports.deleteUser = (req, res, next) => {
 exports.addFollowing = (req, res, next) => {
     // update the following list of the logged in user
     // followId from the client side
-    User.findByIdAndUpdate(req.body.userById, {$push: {
-        following: req.body.followId
-    }}, (err, result) => {
+    User.findByIdAndUpdate(req.body.userId, { $push: { following: req.body.followId } }, (err, result) => {
         if (err) {
-            return res.status(400).json({
-                error: err
-            })
-        } next();
+            return res.status(400).json({ error: err });
+        }
+        next();
     })
 }
 
@@ -128,55 +125,48 @@ exports.addFollowers = (req, res, next) => {
     // update the following list of the logged in user
     // followId from the client side
     // {new: true} return the new data not the old 
-    User.findByIdAndUpdate(req.body.followId, {$push: {
-        followers: req.body.userId
-    }},  { new: true })
-    .populate('following', '_id name')
-    .populate('followers', '_id name')
-    .exec(( err, result) => {
-        if (err) {
-            return res.status(400).json({
-                error: err
-            })
-        }
-        result.hashed_password = undefined;
-        result.salt = undefined;
-        res.json(result);
-    })
+    User.findByIdAndUpdate(req.body.followId, { $push: { followers: req.body.userId } }, { new: true })
+        .populate('following', '_id name')
+        .populate('followers', '_id name')
+        .exec((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            result.hashed_password = undefined;
+            result.salt = undefined;
+            res.json(result);
+        });
 }
 
 // unfollow
 exports.removeFollowing = (req, res, next) => {
     // update the following list of the logged in user
     // unfollowId from the client side
-    User.findByIdAndUpdate(req.body.userById, {$pull: {
-        following: req.body.unfollowId
-    }}, (err, result) => {
+    User.findByIdAndUpdate(req.body.userId, { $pull: { following: req.body.unfollowId } }, (err, result) => {
         if (err) {
-            return res.status(400).json({
-                error: err
-            })
-        } next();
-    })
+            return res.status(400).json({ error: err });
+        }
+        next();
+    });
 }
 
 exports.removeFollowers = (req, res, next) => {
     // update the following list of the logged in user
     // unfollowId from the client side
     // {new: true} return the new data not the old 
-    User.findByIdAndUpdate(req.body.unfollowId, {$pull: {
-        followers: req.body.userId
-    }},  { new: true })
-    .populate('following', '_id name')
-    .populate('followers', '_id name')
-    .exec(( err, result) => {
-        if (err) {
-            return res.status(400).json({
-                error: err
-            })
-        }
-        result.hashed_password = undefined;
-        result.salt = undefined;
-        res.json(result);
-    })
+    User.findByIdAndUpdate(req.body.unfollowId, { $pull: { followers: req.body.userId } }, { new: true })
+        .populate('following', '_id name')
+        .populate('followers', '_id name')
+        .exec((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            result.hashed_password = undefined;
+            result.salt = undefined;
+            res.json(result);
+        });
 }

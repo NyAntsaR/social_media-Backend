@@ -4,8 +4,8 @@ const { userById, allUsers, getUser, updateUser, deleteUser, userPhoto, addFollo
 
 const router = express.Router();
 
-router.put('/user/follow', requireSignin, addFollowing, addFollowers );
-router.put('/user/unfollow', requireSignin, removeFollowing, removeFollowers );
+router.put("/user/follow", requireSignin, addFollowing, addFollowers);
+router.put("/user/unfollow", requireSignin, removeFollowing, removeFollowers);
 
 router.get('/users', allUsers);
 router.get('/user/:userId', requireSignin, getUser);
